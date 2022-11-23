@@ -17,16 +17,20 @@ import com.ps.cc.application.exceptions.InvalidCardException;
 import com.ps.cc.application.exceptions.NotFoundException;
 import com.ps.cc.application.service.CreditCardApplicationService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/creditCard")
+@Api(value="CreditCard", description="Credit card Processing Document")
 @RequiredArgsConstructor
 public class CreditCardApplicationController {
 
 	private final CreditCardApplicationService creditCardAppService;
 
+	@ApiOperation(value = "Adding a new card", response = Iterable.class)
 	@RequestMapping(value = "/v1/addNewCard", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseDTO<List<CreditCardAppDTO>>> addNewCreditCard(
 			@RequestBody CreditCardAppDTO creditCardAppDTO) throws InvalidCardException {
@@ -39,6 +43,7 @@ public class CreditCardApplicationController {
 		}
 	}
 
+	@ApiOperation(value = "View a list of credit cards", response = Iterable.class)
 	@RequestMapping(value = "/v1/getAllCreditCards", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ResponseDTO<List<CreditCardAppDTO>>> getAllCards() throws NotFoundException {
 		ResponseDTO<List<CreditCardAppDTO>> creditCardRespDTO = creditCardAppService.getAllCreditCards();
