@@ -21,6 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		httpSecurity.csrf().disable().authorizeRequests()
 				.antMatchers("/creditCard/v1/addNewCard").permitAll()
 				.antMatchers("/h2-console/**/**").permitAll()
+				.antMatchers("/creditCard/v1/getAllCreditCards").permitAll()
 				.antMatchers().permitAll()
 				.anyRequest().authenticated().and().exceptionHandling()
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

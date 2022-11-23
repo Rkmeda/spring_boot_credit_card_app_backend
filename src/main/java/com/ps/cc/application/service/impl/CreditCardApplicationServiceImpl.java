@@ -10,6 +10,8 @@ import com.ps.cc.application.dto.CreditCardAppDTO;
 import com.ps.cc.application.dto.ResponseDTO;
 import com.ps.cc.application.dto.StatusEnum;
 import com.ps.cc.application.entity.CreditCardApp;
+import com.ps.cc.application.exceptions.InvalidCardException;
+import com.ps.cc.application.exceptions.NotFoundException;
 import com.ps.cc.application.mapper.CreditCardDataMapper;
 import com.ps.cc.application.repository.CreditCardApplicationRepository;
 import com.ps.cc.application.service.CreditCardApplicationService;
@@ -18,16 +20,16 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CreditCardApplicationServiceImpl implements CreditCardApplicationService{
-	
-     
+public class CreditCardApplicationServiceImpl implements CreditCardApplicationService {
+
 	private final CreditCardDataMapper creditCardDataMapper;
-    
-    @Autowired 
+
+	@Autowired
 	CreditCardApplicationRepository creditCardAppRepository;
-	
+
 	@Override
-	public ResponseDTO<List<CreditCardAppDTO>> addNewCreditCard(CreditCardAppDTO creditCardAppDTO) {
+	public ResponseDTO<List<CreditCardAppDTO>> addNewCreditCard(CreditCardAppDTO creditCardAppDTO)
+			throws InvalidCardException {
 
 		if (creditCardAppDTO.getCardNumber() != null && validateCreditCard(creditCardAppDTO.getCardNumber())) {
 			CreditCardApp creditCardApp = creditCardDataMapper.creditCardAppDTOToCreditCardApp(creditCardAppDTO);
@@ -36,10 +38,11 @@ public class CreditCardApplicationServiceImpl implements CreditCardApplicationSe
 			List<CreditCardAppDTO> newCCList = creditCardDataMapper.creditCardAppToCreditCardAppDTOs(ccList);
 			return new ResponseDTO<List<CreditCardAppDTO>>(newCCList, StatusEnum.SUCCESS,
 					ApplicationConstants.SUCCESS_CODE);
+		} else {
+			throw new InvalidCardException();
 		}
-		return null;
 	}
-	
+
 	private boolean validateCreditCard(String cardNumber) {
 		if (cardNumber.length() > 19) {
 			return false;
@@ -57,6 +60,18 @@ public class CreditCardApplicationServiceImpl implements CreditCardApplicationSe
 		}
 		return (nSum % 10 == 0);
 	}
-
+	
+	@Override
+	public ResponseDTO<List<CreditCardAppDTO>> getAllCreditCards() throws NotFoundException {
+		List<CreditCardAppDTO> newCCList = null;
+		List<CreditCardApp> ccList = creditCardAppRepository.findAll();
+		newCCList = creditCardDataMapper.creditCardAppToCreditCardAppDTOs(ccList);
+		if (newCCList != null && newCCList.size() > 0) {
+			return new ResponseDTO<List<CreditCardAppDTO>>(newCCList, StatusEnum.SUCCESS,
+					ApplicationConstants.SUCCESS_CODE);
+		} else {
+			throw new NotFoundException();
+		}
+	}
 
 }
