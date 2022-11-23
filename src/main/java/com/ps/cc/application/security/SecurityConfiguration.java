@@ -23,6 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				.antMatchers("/creditCard/v1/addNewCard").permitAll()
 				.antMatchers("/h2-console/**/**").permitAll()
 				.antMatchers("/creditCard/v1/getAllCreditCards").permitAll()
+				.antMatchers("/actuator/**").permitAll()
 				.antMatchers().permitAll()
 				.anyRequest().authenticated().and().exceptionHandling()
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
