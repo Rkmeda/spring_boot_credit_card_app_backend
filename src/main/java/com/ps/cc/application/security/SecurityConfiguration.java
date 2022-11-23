@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,4 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 			web.ignoring().antMatchers("/h2-console/**");
 			
 	}
+	
+	 public void addCorsMappings(CorsRegistry registry) {
+		    registry.addMapping("/**").allowedOrigins("*");
+	    }
 }

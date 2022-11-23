@@ -39,7 +39,7 @@ public class CreditCardControllerTest extends ApplicationTests{
 	@Test
 	public void testAddNewCard() throws Exception {
 
-		String record = "{\"statusMsg\":\"SUCCESS\",\"statusCode\":\"412\",\"data\":[{\"id\":1,\"name\":\"Ramakrishna\",\"cardNumber\":\"6304219447607087665\",\"balance\":\"100000\",\"limit\":\"500000\"}]}";;
+		String record = "{\"statusMsg\":\"SUCCESS\",\"statusCode\":\"412\",\"data\":[{\"id\":1,\"name\":\"Ramakrishna\",\"cardNumber\":\"6304219447607087665\",\"balance\":\"100000\",\"limit\":\"500000\"},{\"id\":2,\"name\":\"Ramakrishna\",\"cardNumber\":\"6304219447607087665\",\"balance\":\"100000\",\"limit\":\"500000\"}]}";;
 
 		String mockAdd = "{\r\n" + "    \"name\":\"Ramakrishna\",\r\n"
 				+ "    \"cardNumber\":\"6304219447607087665\",\r\n" + "    \"balance\": \"100000\",\r\n"
@@ -51,6 +51,28 @@ public class CreditCardControllerTest extends ApplicationTests{
 		String resultCZ = result.getResponse().getContentAsString();
 		assertNotNull(resultCZ);
 		assertEquals(record, resultCZ);
+	}
+	
+	@Test
+	public void getAllCreditCards() throws Exception {
+		
+		String mockAdd = "{\r\n" + "    \"name\":\"Ramakrishna\",\r\n"
+				+ "    \"cardNumber\":\"6304219447607087665\",\r\n" + "    \"balance\": \"100000\",\r\n"
+				+ "    \"limit\":\"500000\"\r\n" + "}";
+		
+		MvcResult resultTest = mockMvc.perform(MockMvcRequestBuilders.post("/creditCard/v1/addNewCard")
+				.contentType(MediaType.APPLICATION_JSON).content(mockAdd).accept(MediaType.APPLICATION_JSON))
+				.andReturn();
+		
+		String mockCCJson = "{\"statusMsg\":\"SUCCESS\",\"statusCode\":\"412\",\"data\":[{\"id\":1,\"name\":\"Ramakrishna\",\"cardNumber\":\"6304219447607087665\",\"balance\":\"100000\",\"limit\":\"500000\"}]}";
+
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/creditCard/v1/getAllCreditCards")
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		String resultCZ = result.getResponse().getContentAsString();
+		assertNotNull(resultCZ);
+		assertEquals(mockCCJson, resultCZ);
+
 	}
 	
 	@Test
@@ -76,7 +98,7 @@ public class CreditCardControllerTest extends ApplicationTests{
 
 		String mockAdd = "{\r\n" + "    \"name\":\"Ramakrishna\",\r\n"
 				+ "    \"cardNumber\":\"63042194476070876655\",\r\n" + "    \"balance\": \"500000\",\r\n"
-				+ "    \"limit\":\"4546544\"\r\n" + "}";
+				+ "    \"limit\":\"500000\"\r\n" + "}";
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/creditCard/v1/addNewCard")
 				.contentType(MediaType.APPLICATION_JSON).content(mockAdd).accept(MediaType.APPLICATION_JSON))
 				.andReturn();
@@ -85,5 +107,6 @@ public class CreditCardControllerTest extends ApplicationTests{
 		assertNotNull(resultCZ);
 		assertEquals(record.toString(), resultCZ);
 	}
-
+	
+	
 }
